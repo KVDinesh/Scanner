@@ -8,12 +8,18 @@
 
 <ion-content padding>
   <button ion-button block (click)="openScanner()">Scan</button>
-
-  <div class = "list" *ngIf="result !=''" >
-
-    <p>Data :{{result}}</p> 
-    <p>Format :{{format}}</p>
+  <span  *ngIf="result !=''">
+  <div>
+  <ion-card>
+      <ion-card-header>
+        RESULT
+      </ion-card-header>
+      <ion-card-content>
+          <p>Data :{{result}}</p>
+          <p>Format :{{format}}</p>
+      </ion-card-content>
+    </ion-card>
   </div>
+  </span>
 
-  
   </ion-content>
