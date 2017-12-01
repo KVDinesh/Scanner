@@ -1,37 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Storage } from '@ionic/storage';
-
+import { barcode } from '../../Modals/data';
+import { BarcodeService } from '../../services/barcode';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
-
-  result : string;
-  format : string;
-  constructor(public navCtrl: NavController,private scan: BarcodeScanner,private storage: Storage) {
+export class HomePage implements OnInit{
+  barcodes : barcode[] = [];
+  constructor(public navCtrl: NavController,private scan: BarcodeScanner,private storage:Storage,private barcodeservice: BarcodeService) {
 
   }
-
-  ionViewWillEnter()
-  {
-    this.result = '';
-    this.format = '';
-  }
-
   openScanner()
   {
     this.scan.scan().then((data) => {
-      // Success! Barcode data is here
-        this.result = data.text;
-        this.format =  data.format;
-        // this.storage.set('result','data.text');
+      this.barcodeservice.addBarcode(data.text,data.format);
      }, (err) => {
-         // An error occurred
          alert(err)
      });
+  }
+  
+  ngOnInit()
+  {
+    this.barcodeservice.getBarcodes()
+    .then(
+      (barcodes: barcode[]) => this.barcodes = barcodes
+    );
   }
 }
