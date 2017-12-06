@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from 'ionic-angular';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { Storage } from '@ionic/storage';
 import { barcode } from '../../Modals/data';
 import { BarcodeService } from '../../services/barcode';
 
@@ -11,11 +9,12 @@ import { BarcodeService } from '../../services/barcode';
 })
 export class HomePage implements OnInit{
   barcodes : barcode[] = [];
-  constructor(public navCtrl: NavController,private scan: BarcodeScanner,private storage:Storage,private barcodeservice: BarcodeService) {
+  constructor(private scan: BarcodeScanner,private barcodeservice: BarcodeService) {
 
   }
-  openScanner()
+  public openScanner()
   {
+    console.log("here");
     this.scan.scan().then((data) => {
       this.barcodeservice.addBarcode(data.text,data.format);
      }, (err) => {

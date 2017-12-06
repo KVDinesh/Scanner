@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content padding>
-  <button ion-button block (click)="openScanner()">Scan</button>
+  <button class="open-scanner" name="button" ion-button block (click)="openScanner()">Scan</button>
   <ion-card *ngFor="let barcode of barcodes">
     <ion-card-content text-center>
     <p><b>Data</b>: {{barcode.data}}</p>

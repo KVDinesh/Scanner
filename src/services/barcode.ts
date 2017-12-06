@@ -1,33 +1,31 @@
 import { barcode } from '../Modals/data';
 import { Storage } from '@ionic/storage';
 import { Injectable } from '@angular/core';
-import { File } from '@ionic-native/file';
 
-declare var cordova: any;
 
 @Injectable()
 export class BarcodeService
 {
     private barcodes: barcode[]= [];
-    constructor(private storage:Storage,private file:File)
+    constructor(private storage:Storage)
     {
 
     }
-    addBarcode(data:string,format:string)
-    {
+
+addBarcode(data:string,format:string)
+{
         const Barcode = new barcode(data,format);
         this.barcodes.push(Barcode);
         this.storage.set('barcodes',this.barcodes)
-        .then(
-        )
+        .then()
         .catch(
         err =>
-            {
+        {
                  this.barcodes.splice(this.barcodes.indexOf(Barcode),1);
-             }
+        }
 
-        );
-    }
+    );
+}
 
 getBarcodes()
 {
