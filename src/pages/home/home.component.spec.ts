@@ -1,76 +1,37 @@
 import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IonicModule, Platform } from 'ionic-angular';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { } from 'jasmine';
-
-import { HomePage } from './home';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { IonicStorageModule } from '@ionic/storage';
-
-import {
-  PlatformMock,
-  StatusBarMock,
-  SplashScreenMock,
-  BarcodeScannerMock,
-  StorageMock,
-  BarcodeServiceMock
-} from '../../../test-config/mocks-ionic';
+import { TestUtils } from '../../test';
+import { } from 'jasmine';
+import { MenuMock, PlatformMock, StatusBarMock, SplashScreenMock } from 'ionic-mocks';
+import { HomePage } from './home'
 import { BarcodeService } from '../../services/barcode';
-//import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-
-import { Observable } from 'rxjs/RX';
+import { Observable } from 'rxjs/Rx';
 import { By } from '@angular/platform-browser';
+import { BarcodeScannerMock, BarcodeServiceMock } from '../../mocks';
+import { TestData } from '../../test-data';
+
+let fixture: ComponentFixture<HomePage> = null;
+let instance: HomePage = null;
+
+describe('HomePage', () => {
+
+  beforeEach(async(() => TestUtils.beforeEachCompiler([HomePage]).then(compiled => {
+    fixture = compiled.fixture;
+    instance = compiled.instance;
+  })));
 
 
-
-describe('HomePage Component', () => {
-  let fixture: ComponentFixture<HomePage>;
-  let component: HomePage;
-  let storage: Storage;
-  let barcodeScanner: BarcodeScanner;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [HomePage],
-      imports: [
-        IonicModule.forRoot(HomePage), IonicStorageModule.forRoot(),
-      ],
-      providers: [
-        { provide: StatusBar, useClass: StatusBarMock },
-        { provide: SplashScreen, useClass: SplashScreenMock },
-        { provide: Platform, useClass: PlatformMock },
-        { provide: BarcodeScanner, useClass: BarcodeScannerMock },
-        { provide: Storage, useClass: StorageMock },
-        { provide: BarcodeService, useClass: BarcodeServiceMock }
-      ],
-    });
-    fixture = TestBed.createComponent(HomePage);
-    component = fixture.componentInstance;
-
-    storage = fixture.debugElement.injector.get(Storage);
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(HomePage);
-    component = fixture.componentInstance;
-
-    // spyOn(barcodeScanner, "scan").and.callFake(function () {
-    //   return {
-    //     then: function (callback) { return callback({ format: 'QR_CODE', cancelled: false, text: 'RESPONSE' }); }
-    //   };
-    // });
-
-  });
-
-  it('should be created', () => {
-    // component = new HomePage();
-    expect(component instanceof HomePage).toBe(true);
+  it('should is created', () => {
+    expect(instance).toBeTruthy();
+    expect(fixture).toBeTruthy();
   });
 
   it('should have a class member of barcodes', () => {
-    expect(component.barcodes).toBeDefined();
+    expect(instance.barcodes).toBeDefined();
   });
 
   it('should have a title of Scanner', async(() => {
@@ -78,22 +39,24 @@ describe('HomePage Component', () => {
     expect(app.querySelector('ion-title').textContent).toContain('SCANNER');
   }));
 
-
   it("should have a openScanner method", () => {
-    expect(component.openScanner).toBeDefined();
+    expect(instance.openScanner).toBeDefined();
   });
 
   it("should have ngOninit method", () => {
-    expect(component.ngOnInit).toBeDefined();
+    expect(instance.ngOnInit).toBeDefined();
   });
 
   it('should call openscanner when scan button is clicked', fakeAsync(() => {
-    spyOn(component, 'openScanner');
+    spyOn(instance, 'openScanner');
     let button = fixture.debugElement.nativeElement.querySelector('.open-scanner');
     button.click();
-
     fixture.whenStable().then(() => {
-      expect(component.openScanner).toHaveBeenCalled();
+      expect(instance.openScanner).toHaveBeenCalled();
     })
   }));
+
+  it('should scan the barcode and retrieve the decoded text', () => {
+    spyOn(instance.scan, 'scan').and.returnValue(Observable.of(TestData.barcodes))
+  });
 });

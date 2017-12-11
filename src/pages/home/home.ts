@@ -9,7 +9,7 @@ import { BarcodeService } from '../../services/barcode';
 })
 export class HomePage implements OnInit{
   barcodes : barcode[] = [];
-  constructor(private scan: BarcodeScanner,private barcodeservice: BarcodeService) {
+  constructor(public scan: BarcodeScanner,private barcodeservice: BarcodeService) {
 
   }
   public openScanner()
