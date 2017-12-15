@@ -7,21 +7,20 @@ import { BarcodeService } from '../../services/barcode';
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage implements OnInit{
+export class HomePage {
   barcodes : barcode[] = [];
   constructor(public scan: BarcodeScanner,private barcodeservice: BarcodeService) {
 
   }
   public openScanner()
   {
-    console.log("here");
     this.scan.scan().then((data) => {
       this.barcodeservice.addBarcode(data.text,data.format);
      }, (err) => {
          alert(err)
      });
   }
-  
+
   ngOnInit()
   {
     this.barcodeservice.getBarcodes()

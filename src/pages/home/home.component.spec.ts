@@ -16,12 +16,14 @@ import { TestData } from '../../test-data';
 
 let fixture: ComponentFixture<HomePage> = null;
 let instance: HomePage = null;
-
+let Scanner: BarcodeService = null;
 describe('HomePage', () => {
 
   beforeEach(async(() => TestUtils.beforeEachCompiler([HomePage]).then(compiled => {
     fixture = compiled.fixture;
     instance = compiled.instance;
+    Scanner = fixture.debugElement.injector.get(BarcodeService);
+
   })));
 
 
@@ -56,7 +58,20 @@ describe('HomePage', () => {
     })
   }));
 
-  it('should scan the barcode and retrieve the decoded text', () => {
-    spyOn(instance.scan, 'scan').and.returnValue(Observable.of(TestData.barcodes))
+  it('should scan the barcode and retrieve the decoded text', fakeAsync(() => {
+    spyOn(instance.scan, 'scan').and.callThrough();
+    spyOn(Scanner, 'addBarcode');
+    instance.openScanner();
+    tick();
+    expect(instance.scan.scan).toHaveBeenCalled();
+    expect(Scanner.addBarcode).toHaveBeenCalledWith(TestData.barcodes.text,TestData.barcodes.format);
+  }))
+
+  it("Should update the barcodes array when called", () => {
+    spyOn(Scanner, 'getBarcodes').and.returnValue(Promise.resolve({}));
+    fixture.detectChanges();
+    expect(Scanner.getBarcodes).toHaveBeenCalled();
   });
+
+
 });
